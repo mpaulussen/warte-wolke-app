@@ -629,3 +629,15 @@ details.setbox .tip-detail>.btn,details.setbox .btn-col .btn{width:100%}
 .more-foot{text-align:center;line-height:1.6}
 #more-msg:not(:empty){background:var(--w-tip-bg);color:var(--w-tip-ink);border-radius:14px;padding:10px 14px}
 details.setbox>summary::after{color:var(--muted);flex:none;margin-right:6px}
+/* 0.32 Startseite: erst erklären, dann fragen */
+.welcome .w-step{display:flex;flex-direction:column;gap:18px}
+.welcome .w-step[hidden]{display:none}
+.intro-list{list-style:none;margin:0;padding:0}
+.intro-list .tip-row{cursor:default;align-items:flex-start}
+.intro-list .tip-main span{-webkit-line-clamp:unset;display:block}
+.intro-note{margin:0;display:flex;gap:10px;align-items:flex-start;font-size:15px;line-height:1.45;color:var(--w-tip-ink);background:var(--w-tip-bg);border-radius:16px;padding:12px 14px}
+.intro-note .ic{flex:none;margin-top:2px}
+.w-steps{text-align:center;margin:-6px 0 0}
+.welcome .page-head .display{font-size:38px}
+#view-more .world-link{margin-top:6px}
+#btn-intro-back{align-self:center}

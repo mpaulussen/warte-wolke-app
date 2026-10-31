@@ -74,12 +74,29 @@
   <p id="app-error" class="msg warn app-error" role="alert" hidden></p>
   <!-- Einstieg beim ersten Start -->
   <section id="view-welcome" class="view welcome" hidden aria-labelledby="h-welcome">
-    <span class="st-label"><svg class="ic" aria-hidden="true"><use href="#i-route"/></svg>Willkommen bei Flowtown</span>
-    <h2 id="h-welcome" class="st-title">Flowtown misst, wo du an Ampeln wartest.</h2>
-    <p class="st-sub">Damit Bielefeld die Ampeln besser takten kann. Deine Fahrten bleiben auf deinem Handy, außer du erlaubst hier etwas anderes. Alles lässt sich später unter „Mehr“ ändern.</p>
+    <div id="w-step1" class="w-step">
+    <header class="claim">
+      <p class="eyebrow">Willkommen bei Flowtown</p>
+      <h2 id="h-welcome" class="display">Die <em>grüne Welle</em><br>beginnt bei dir.</h2>
+      <p class="claim-sub">Flowtown misst, wo du an Ampeln wartest. Damit Bielefeld die Ampeln besser taktet.</p>
+    </header>
+    <ul class="tip-list intro-list">
+      <li class="tipcard"><div class="tip-row"><span class="tip-ic"><svg class="ic" aria-hidden="true"><use href="#i-alert"/></svg></span><span class="tip-main"><b>Vor der Fahrt</b><span>Stau und Baustellen auf deinen Wegen, die beste Abfahrt, Bus und Bahn zu jedem Ziel.</span></span></div></li>
+      <li class="tipcard"><div class="tip-row"><span class="tip-ic"><svg class="ic" aria-hidden="true"><use href="#i-play"/></svg></span><span class="tip-main"><b>Unterwegs</b><span>Ein Knopf: Losfahren. Flowtown erkennt jeden Ampelhalt selbst, du tippst nichts an.</span></span></div></li>
+      <li class="tipcard"><div class="tip-row"><span class="tip-ic"><svg class="ic" aria-hidden="true"><use href="#i-chart"/></svg></span><span class="tip-main"><b>Danach</b><span>Wo die Zeit geblieben ist, Plan gegen Ist und Tipps für deine Wege.</span></span></div></li>
+    </ul>
+    <p class="intro-note"><svg class="ic" aria-hidden="true"><use href="#i-shield"/></svg><span>Deine Fahrten bleiben auf deinem Handy. Keine Anmeldung, keine Werbung. Mit Auto, Rad, Bus, Bahn oder zu Fuß.</span></p>
+    <button id="btn-intro-next" class="btn primary big go" type="button">Weiter</button>
+    <p class="small muted w-steps" id="w-steps1">Schritt 1 von 2</p>
+    </div>
+    <div id="w-step2" class="w-step" hidden>
+    <header class="page-head">
+      <p class="eyebrow">Schritt 2 von 2</p>
+      <h2 id="h-welcome2" class="display">Was darf Flowtown?</h2>
+      <p class="page-sub">Alles lässt sich später in den Einstellungen ändern.</p>
+    </header>
     <fieldset class="card consent">
       <legend class="sr-only">Was Flowtown darf</legend>
-      <h3>Was darf Flowtown?</h3>
       <label class="check"><input type="checkbox" id="w-lage" checked><span>Verkehrslage vor der Fahrt laden</span></label>
       <p class="small muted">Lädt Stau und Baustellen für ganz Bielefeld. Über dich wird nichts gesendet.</p>
       <label class="check"><input type="checkbox" id="w-wir"><span>Fahrten anonym beitragen</span></label>
@@ -98,6 +115,8 @@
     <p class="small"><a href="datenschutz.html" target="_blank" rel="noopener">Datenschutzerklärung lesen</a></p>
     <p id="welcome-msg" class="msg" role="status" aria-live="polite"></p>
     <button id="btn-welcome" class="btn primary big go" type="button">Los geht’s</button>
+    <button id="btn-intro-back" class="btn quiet" type="button">Zurück</button>
+    </div>
   </section>
 
   <!-- Fahren -->
@@ -326,6 +345,7 @@
       </div>
     </details>
     </section>
+    <button type="button" class="world-link" id="btn-intro"><svg class="ic" aria-hidden="true"><use href="#i-info"/></svg><span><b>So funktioniert Flowtown</b><span>Kurz erklärt, für dich oder zum Zeigen</span></span><svg class="ic" aria-hidden="true"><use href="#i-chevron"/></svg></button>
     <p class="small muted more-foot"><a href="datenschutz.html" target="_blank" rel="noopener">Datenschutzerklärung</a> · Ampelstandorte: © OpenStreetMap-Mitwirkende · Prototyp, Version <span id="app-version"></span></p>
   </section>
 </main>

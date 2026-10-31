@@ -2,7 +2,7 @@
 (function () {
   'use strict';
 
-  const VERSION = '0.31.0';
+  const VERSION = '0.32.0';
   const $ = (s) => document.querySelector(s);
   const $$ = (s) => Array.from(document.querySelectorAll(s));
 
@@ -2928,8 +2928,23 @@
     $('#w-ki').checked = !!settings.server.ki;
     const code = new URLSearchParams(location.search).get('code');   // Einladungslink: …/flowtown/?code=FT-XXXX-XXXX
     if (code) { $('#w-code').value = showCode(code); history.replaceState(null, '', location.pathname); }
+    introOnly = false;
+    welcomeStep(1);
     showView('welcome');
   }
+  // Startseite in zwei Schritten: erst erklären, was Flowtown kann, dann um Erlaubnis fragen
+  let introOnly = false;
+  function welcomeStep(n) {
+    $('#w-step1').hidden = n !== 1; $('#w-step2').hidden = n !== 2;
+    $('#btn-intro-next').textContent = introOnly ? 'Zurück zur App' : 'Weiter';
+    $('#w-steps1').hidden = introOnly;
+    const h = $(n === 1 ? '#h-welcome' : '#h-welcome2');
+    h.setAttribute('tabindex', '-1'); h.focus({ preventScroll: true });
+    window.scrollTo(0, 0);
+  }
+  $('#btn-intro-next').addEventListener('click', () => { if (introOnly) showView('more'); else welcomeStep(2); });
+  $('#btn-intro-back').addEventListener('click', () => welcomeStep(1));
+  $('#btn-intro').addEventListener('click', () => { introOnly = true; showView('welcome'); welcomeStep(1); });
   $('#btn-welcome').addEventListener('click', async () => {
     const msg = $('#welcome-msg');
     Object.assign(settings.server, { lage: $('#w-lage').checked, wir: $('#w-wir').checked, ki: $('#w-ki').checked });
