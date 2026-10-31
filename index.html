@@ -102,8 +102,12 @@
 
   <!-- Fahren -->
   <section id="view-start" class="view" aria-labelledby="h-start">
-    <div class="hero" data-hero="go">
-      <div class="hero-text"><p class="hero-small" id="today-date"></p><h2 id="h-start" class="hero-title">Die grüne Welle beginnt bei dir.</h2></div>
+    <header class="claim">
+      <p class="eyebrow" id="today-date"></p>
+      <h2 id="h-start" class="display">Die <em>grüne Welle</em><br>beginnt bei dir.</h2>
+      <p class="claim-sub">Miss deine Wege. Bielefeld schaltet die Ampeln besser.</p>
+    </header>
+    <div class="entry">
     <fieldset class="switch">
       <legend>Womit?</legend>
       <div class="switch-row">
@@ -118,13 +122,13 @@
         <label><input type="radio" name="pt" value="zug"><span><svg class="ic" aria-hidden="true"><use href="#i-train"/></svg>Zug</span></label>
       </div>
     </fieldset>
-    <button id="btn-start" class="btn big hero-btn go" type="button"><svg class="ic" aria-hidden="true"><use href="#i-play"/></svg><span id="btn-start-label">Losfahren</span></button>
+    <button id="btn-start" class="btn primary big go" type="button"><svg class="ic" aria-hidden="true"><use href="#i-play"/></svg><span id="btn-start-label">Losfahren</span></button>
     </div>
-    <div id="wohin" class="wohin"></div>
     <p id="start-msg" class="msg" role="status" aria-live="polite"></p>
     <div id="a2hs" class="a2hs" hidden></div>
-    <div id="tiles" class="tiles"></div>
-    <div id="st-detail"></div>
+    <section class="today-list" aria-labelledby="h-weg"><h3 class="eyebrow" id="h-weg">Dein Weg heute</h3><div id="weg"></div><div id="st-detail"></div></section>
+    <div id="wohin" class="wohin"></div>
+    <div id="tip-strip"></div>
     <div id="vorfahrt" class="vorfahrt" hidden></div>
     <div class="access-row">
       <label class="check"><input type="checkbox" id="inp-access"><svg class="ic" aria-hidden="true"><use href="#i-access"/></svg> Profil barrierefrei</label>
@@ -193,31 +197,17 @@
 
   <!-- Tipps -->
   <section id="view-tips" class="view" hidden aria-labelledby="h-tips">
-    <div class="hero" data-hero="tip">
-      <div class="hero-text"><p class="hero-small" id="tips-small">Tipps</p><h2 id="h-tips" class="hero-title">Dein größter Hebel</h2></div>
-      <div class="hero-lever" id="tips-lever"></div>
-      <button id="btn-tip-more" class="btn big hero-btn" type="button" aria-expanded="false">Mehr dazu</button>
-    </div>
-    <div class="hero-bar chips" id="tips-filter" role="group" aria-label="Tipps filtern"></div>
-    <div id="tips-body" class="tiles"></div>
+    <header class="page-head"><h2 id="h-tips" class="display">Tipps</h2><p class="page-sub" id="tips-small"></p></header>
+    <div id="tips-body" class="tip-list"></div>
     <p class="note"><svg class="ic" aria-hidden="true"><use href="#i-info"/></svg><span>Aus deinen Fahrten, auf deinem Gerät ausgewertet.</span></p>
   </section>
 
   <!-- Statistik -->
   <section id="view-stats" class="view" hidden aria-labelledby="h-stats">
-    <div class="hero" data-hero="hist">
-      <div class="hero-text"><p class="hero-small" id="hist-small">Verlauf</p><h2 id="h-stats" class="hero-title">Verlauf</h2></div>
-      <div class="hero-week" id="hist-week"></div>
-      <button type="button" class="btn big hero-btn" data-goto="map"><svg class="ic" aria-hidden="true"><use href="#i-map"/></svg>Auf der Karte ansehen</button>
-    </div>
-    <div class="hero-bar chips" id="hist-tabs" role="group" aria-label="Ansicht">
-      <button type="button" data-hist="fahrten" aria-pressed="true">Fahrten</button><button type="button" data-hist="wege" aria-pressed="false">Wege</button><button type="button" data-hist="ampeln" aria-pressed="false">Ampeln</button>
-    </div>
-    <div id="hist-top" class="tiles-col"></div>
-    <div class="seg" id="stats-range" role="group" aria-label="Zeitraum">
-      <button type="button" data-range="week" aria-pressed="true"><svg class="ic" aria-hidden="true"><use href="#i-calendar"/></svg>Diese Woche</button>
-      <button type="button" data-range="all" aria-pressed="false"><svg class="ic" aria-hidden="true"><use href="#i-list"/></svg>Gesamt</button>
-    </div>
+    <header class="page-head row"><h2 id="h-stats" class="display">Verlauf</h2>
+    <div class="seg pill" id="stats-range" role="group" aria-label="Zeitraum">
+      <button type="button" data-range="week" aria-pressed="true">Woche</button><button type="button" data-range="month" aria-pressed="false">Monat</button><button type="button" data-range="all" aria-pressed="false">Alles</button>
+    </div></header>
     <p id="stats-demo" class="msg warn" hidden>Enthält Demo-Daten aus der Testfahrt.</p>
     <div id="stats-body"></div>
   </section>
