@@ -2,7 +2,7 @@
 (function () {
   'use strict';
 
-  const VERSION = '0.29.0';
+  const VERSION = '0.30.0';
   const $ = (s) => document.querySelector(s);
   const $$ = (s) => Array.from(document.querySelectorAll(s));
 
@@ -1289,7 +1289,7 @@
     return `<section class="card bars-card" aria-label="Minuten an Ampeln ${statsRange === 'week' ? 'je Tag' : 'je Woche'}"><p class="bars-title">Minuten an Ampeln ${statsRange === 'week' ? 'je Tag' : 'je Woche'}</p>
       <div class="bars" role="img" aria-label="${esc(say)}">${buckets.map((x) => `<span class="bar-col${x.future ? ' future' : ''}"><span class="bar-v">${x.w ? fmtDur(x.w) : ''}</span><span class="bar" style="height:${Math.round(4 + x.w / max * 64)}px"></span><span class="bar-l">${x.label}</span></span>`).join('')}</div></section>`;
   }
-  let routeOpen = null;
+  let routeOpen = null, histOpen = null;
   function routeRows(group) {
     const { routes } = sortedRoutes(group);
     if (!routes.length) return '<p class="small muted">Ab zwei Fahrten auf derselben Strecke stehen hier deine Wege mit der besten Abfahrtszeit.</p>';
@@ -1304,41 +1304,48 @@
     $('#stats-demo').hidden = !list.some((t) => t.demo);
     const body = $('#stats-body');
     if (!list.length) {
+      $('#stats-small').textContent = '';
       body.innerHTML = `<p class="msg">${statsRange === 'week' ? 'Diese Woche noch keine Fahrten.' : statsRange === 'month' ? 'In den letzten 30 Tagen keine Fahrten.' : 'Noch keine Fahrten.'} Starte unter „Heute“ deine erste Aufzeichnung oder spiele unter „Mehr“ eine Testfahrt ab.</p>`;
       return;
     }
     const ag = aggregate(list);
     const share = ag.halts + ag.passes ? ag.halts / (ag.halts + ag.passes) : 0;
     const worst = ag.approaches.filter((a) => a.halts).sort((a, b) => b.wait - a.wait)[0];
-    const rowList = ag.approaches.sort((a, b) => b.wait - a.wait).map((a) => {
-      const n = a.halts + a.passes;
-      const rating = a.up || a.down ? `${a.up} / ${a.down}` : '–';
-      return `<tr><td>${placeFor(a.sample)}</td><td>${dirShort(a.h)}</td><td>${n}</td><td>${fmtPct(a.halts / n)}</td><td>${a.halts ? fmtS(a.wait / a.halts) : '–'}</td><td>${rating}</td></tr>`;
-    });
-    const thead = '<thead><tr><th>Ampel</th><th>Richtung</th><th>Fahrten</th><th>mit Halt</th><th>Ø Warten</th><th>gut / schlecht</th></tr></thead>';
-    const table = (rs) => `<div class="tbl-wrap"><table>${thead}<tbody>${rs.join('')}</tbody></table></div>`;
+    ag.approaches.sort((a, b) => b.wait - a.wait);
+    // schlichte Liste statt Tabelle: Ampel und Richtung links, Halte und Wartezeit rechts
+    const ampRows = ag.approaches.map((a) => { const n = a.halts + a.passes; return `<li><span class="amp-name">${placeFor(a.sample)}<span class="small muted">${a.h != null ? esc(dirName(a.h)) + ' · ' : ''}${n} Fahrt${n === 1 ? '' : 'en'}${a.up || a.down ? ` · ${a.up} gut, ${a.down} schlecht` : ''}</span></span><b>${a.halts ? `${a.halts}× · Ø ${fmtDur(a.wait / a.halts)}` : 'frei'}</b></li>`; });
+    const ampList = (rs) => `<ul class="amp-list">${rs.join('')}</ul>`;
     // lange Listen: die wichtigsten zuerst, der Rest zum Aufklappen
     const rest = (items, n, label, wrap) => items.length > n ? `<details class="more-box"><summary>${ic('list')}${label} (${items.length - n} weitere)</summary>${wrap(items.slice(n))}</details>` : '';
     const group = MODE_GROUP[selectedMode()];
     const legend = `<p class="tlegend" aria-hidden="true"><span class="drive">fahren</span><span class="amp">Ampel</span><span class="slow">Stau</span><span class="stop">Haltestelle</span></p>`;
-    body.innerHTML = `
-      <div class="kpis3">
-        <div class="kpi3"><b>${list.length}</b><span>Fahrt${list.length === 1 ? '' : 'en'}</span></div>
-        <div class="kpi3"><b>${fmtPct(share)}</b><span>mit Halt</span></div>
-        <div class="kpi3"><b>${ag.halts ? fmtS(ag.wait / ag.halts) : '–'}</b><span>je Halt</span></div>
-      </div>
-      ${waitBars(list)}
-      <section class="hist-sec"><h3 class="eyebrow">Deine Wege</h3>${routeRows(group)}</section>
-      <section class="hist-sec"><h3 class="eyebrow">Fahrten</h3>${legend}
-      <div class="card timeline">${tripTimeline(list, 6)}</div>
-      ${list.length > 6 ? `<details class="more-box"><summary>${ic('list')}Ältere anzeigen (${list.length - 6} weitere)</summary><div class="card timeline">${tripTimeline(list.slice().sort((x, y) => y.start - x.start).slice(6))}</div></details>` : ''}</section>
-      ${costSummary(list)}
-      <section class="hist-sec"><h3 class="eyebrow">Ampeln</h3>
-      <button type="button" class="world-link" data-goto="map">${ic('map')}<span><b>Karte</b><span>Wo es in Bielefeld hakt</span></span>${ic('chevron')}</button>
-      ${worst ? `<div class="card worst">${cardHead('alert', 'Deine nervigste Ampel', '', 'bad')}<p><strong>${placeFor(worst.sample)}</strong>${worst.h != null ? ', ' + esc(dirName(worst.h)) : ''}</p><ul class="facts"><li>${ic('light')}<span>gehalten</span><b>${worst.halts}×</b></li><li>${ic('hourglass')}<span>zusammen</span><b>${fmtDur(worst.wait)} min</b></li><li>${ic('clock')}<span>längster Halt</span><b>${fmtDur(worst.maxWait)} min</b></li></ul></div>` : ''}
-      ${table(rowList.slice(0, 8))}
-      ${rest(rowList, 8, 'Alle Ampeln anzeigen', table)}</section>
-      <details class="more-box"><summary>${ic('list')}Nach Verkehrsmittel</summary>${modeCard(group)}${settings.access.on ? accessCard() : ''}</details>`;
+    // ein Satz statt Kacheln, darunter wenige Boxen zum Aufklappen wie bei den Tipps
+    const when = statsRange === 'week' ? 'diese Woche' : statsRange === 'month' ? 'in 30 Tagen' : 'insgesamt';
+    $('#stats-small').textContent = `${list.length} Fahrt${list.length === 1 ? '' : 'en'} ${when}, ${fmtPct(share)} mit Halt an der Ampel${ag.halts ? `, im Schnitt ${fmtS(ag.wait / ag.halts)} je Halt` : ''}.`;
+    const last = list.reduce((x, y) => (y.start > x.start ? y : x));
+    const lastWait = tripWait(last);
+    const lastDay = Math.round((dayStart(Date.now()) - dayStart(last.start)) / 864e5);
+    const lastWhen = (lastDay === 0 ? 'heute' : lastDay === 1 ? 'gestern' : new Date(last.start).toLocaleDateString('de-DE', { weekday: 'short', day: 'numeric', month: 'numeric' })) + ' ' + new Date(last.start).toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' });
+    const { routes } = sortedRoutes(group);
+    const cs = list.map(tripCosts).filter(Boolean);
+    const boxes = [
+      { k: 'fahrten', icon: 'list', head: 'Fahrten', num: String(list.length),
+        sub: `Zuletzt ${lastWhen}, ${MODES[last.mode] ? MODES[last.mode].label : last.mode}${lastWait ? `, ${fmtDur(lastWait)} min an Ampeln` : ', ohne Ampelhalt'}`,
+        html: () => `${legend}<div class="timeline">${tripTimeline(list, 6)}</div>${list.length > 6 ? `<details class="more-box"><summary>${ic('list')}Ältere anzeigen (${list.length - 6} weitere)</summary><div class="timeline">${tripTimeline(list.slice().sort((x, y) => y.start - x.start).slice(6))}</div></details>` : ''}` },
+      routes.length && { k: 'wege', icon: 'route', head: 'Deine Wege', num: String(Math.min(3, routes.length)),
+        sub: `${esc(labelFor(routes[0].first))} → ${esc(labelFor(routes[0].last))}, ${routes[0].trips.length}×`, html: () => routeRows(group) },
+      ag.per.length && { k: 'ampeln', icon: 'light', head: 'Ampeln', num: worst ? `${fmtDur(worst.wait)} min` : String(ag.per.length),
+        sub: worst ? `Am längsten: ${plain(placeFor(worst.sample))}, ${worst.halts}× gehalten` : `${ag.per.length} Ampel${ag.per.length === 1 ? '' : 'n'}, ohne Halt`,
+        html: () => `<h4 class="day-title">Längste Wartezeit zuerst</h4>${ampList(ampRows.slice(0, 6))}${rest(ampRows, 6, 'Weitere Ampeln', ampList)}` },
+      cs.length && { k: 'kosten', icon: 'euro', head: 'Kosten', num: fmtEuro(cs.reduce((x, c) => x + c.halts, 0)),
+        sub: 'Was die Ampelhalte geschätzt kosten', html: () => costSummary(list).replace(/^<div class="card">/, '<div>') },
+      { k: 'mode', icon: 'chart', head: 'Nach Verkehrsmittel', sub: settings.access.on ? 'Vergleich und dein Profil' : 'Auto, Rad, Bus und zu Fuß im Vergleich',
+        html: () => modeCard(group) + (settings.access.on ? accessCard() : '') }
+    ].filter(Boolean);
+    const box = (x) => `<div class="tipcard" data-world="hist"><button type="button" class="tip-row" data-hist="${x.k}" aria-expanded="${histOpen === x.k}"><span class="tip-ic">${ic(x.icon)}</span><span class="tip-main"><b>${x.head}</b><span>${x.sub}</span></span>${x.num ? `<span class="tip-num">${x.num}</span>` : ''}</button>${histOpen === x.k ? `<div class="tip-detail">${x.html()}</div>` : ''}</div>`;
+    body.innerHTML = `${waitBars(list)}
+      <section class="hist-sec"><h3 class="eyebrow">Im Einzelnen</h3>${boxes.map(box).join('')}</section>
+      <button type="button" class="world-link" data-goto="map">${ic('map')}<span><b>Karte</b><span>Wo es in Bielefeld hakt</span></span>${ic('chevron')}</button>`;
     requestNames(ag.per.map((a) => a.sample), () => { if (!$('#view-stats').hidden) renderStats(); });
   }
   $('#stats-range').addEventListener('click', (ev) => {
@@ -1352,6 +1359,8 @@
     const del = ev.target.closest('button[data-del]');
     const rv = ev.target.closest('button[data-review]');
     const ro = ev.target.closest('button[data-route]');
+    const hb = ev.target.closest('button[data-hist]');
+    if (hb) { histOpen = histOpen === hb.dataset.hist ? null : hb.dataset.hist; renderStats(); return; }
     if (ro) { const i = Number(ro.dataset.route); routeOpen = routeOpen === i ? null : i; renderStats(); return; }
     if (del) {
       if (del.dataset.armed) {
