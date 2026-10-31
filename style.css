@@ -641,3 +641,4 @@ details.setbox>summary::after{color:var(--muted);flex:none;margin-right:6px}
 .welcome .page-head .display{font-size:38px}
 #view-more .world-link{margin-top:6px}
 #btn-intro-back{align-self:center}
+.claim-sub{max-width:none;text-wrap:pretty}
