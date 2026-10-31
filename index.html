@@ -232,77 +232,101 @@
 
   <!-- Mehr -->
   <section id="view-more" class="view" hidden aria-labelledby="h-more">
-    <h2 id="h-more">Daten und Einstellungen</h2>
-    <div class="card">
-      <div class="card-head"><span class="chip"><svg class="ic" aria-hidden="true"><use href="#i-db"/></svg></span><h3>Deine Daten</h3></div>
-      <p class="small muted">Alles bleibt auf diesem Gerät, bis du es exportierst.</p>
-      <div class="btn-col">
-        <button id="btn-export" class="btn" type="button"><svg class="ic" aria-hidden="true"><use href="#i-download"/></svg>Daten exportieren (JSON)</button>
-        <button id="btn-export-csv" class="btn" type="button"><svg class="ic" aria-hidden="true"><use href="#i-download"/></svg>Halte exportieren (CSV)</button>
-        <label class="btn file-btn"><svg class="ic" aria-hidden="true"><use href="#i-upload"/></svg>Daten importieren<input id="inp-import" type="file" accept="application/json,.json"></label>
-      </div>
-    </div>
-    <div class="card" id="pilot-card"></div>
-    <div class="card">
-      <div class="card-head"><span class="chip"><svg class="ic" aria-hidden="true"><use href="#i-cloud"/></svg></span><h3>Flowtown-Server</h3></div>
-      <label class="field" for="inp-server">Adresse des Servers
-        <input id="inp-server" type="url" inputmode="url" autocomplete="off" spellcheck="false" placeholder="https://…/flowtown-api">
-      </label>
-      <p class="small muted" id="server-status" role="status" aria-live="polite"></p>
-      <label class="check"><input type="checkbox" id="inp-wir"><svg class="ic" aria-hidden="true"><use href="#i-route"/></svg> Fahrten anonym beitragen</label>
-      <label class="check"><input type="checkbox" id="inp-lage"><svg class="ic" aria-hidden="true"><use href="#i-alert"/></svg> Verkehrslage vor der Fahrt</label>
-      <label class="check"><input type="checkbox" id="inp-ki"><svg class="ic" aria-hidden="true"><use href="#i-spark"/></svg> KI-Einschätzung erlauben</label>
-      <details class="more-info"><summary><svg class="ic" aria-hidden="true"><use href="#i-shield"/></svg>Was wird gesendet?</summary>
-        <ul class="ilist small">
-          <li><svg class="ic" aria-hidden="true"><use href="#i-route"/></svg><span><b>Beitragen:</b> je Ampel nur Richtung, Zeitfenster und Wartezeit. Keine Uhrzeiten, kein Start, kein Ziel. Werte anderer erscheinen ab fünf Personen.</span></li>
-          <li><svg class="ic" aria-hidden="true"><use href="#i-alert"/></svg><span><b>Verkehrslage:</b> Die App lädt die Lage für ganz Bielefeld und prüft auf dem Handy, was deine Wege betrifft. Über dich wird dabei nichts gesendet.</span></li>
-          <li><svg class="ic" aria-hidden="true"><use href="#i-spark"/></svg><span><b>KI:</b> auf Knopfdruck zusammengefasste Werte an Mistral (EU), etwa Wartezeiten und Ampelnamen. Keine Koordinaten, nichts wird gespeichert.</span></li>
-        </ul></details>
-      <button id="btn-server-test" class="btn" type="button"><svg class="ic" aria-hidden="true"><use href="#i-check"/></svg>Verbindung prüfen</button>
-    </div>
-    <div class="card">
-      <div class="card-head"><span class="chip"><svg class="ic" aria-hidden="true"><use href="#i-euro"/></svg></span><h3>Preise für die Kostenschätzung</h3></div>
-      <label class="row" for="inp-fuel">Sprit, Euro je Liter
-        <input id="inp-fuel" class="price" type="text" inputmode="decimal" autocomplete="off">
-      </label>
-      <label class="row" for="inp-power">Strom, Euro je kWh
-        <input id="inp-power" class="price" type="text" inputmode="decimal" autocomplete="off">
-      </label>
-    </div>
-    <div class="card">
-      <div class="card-head"><span class="chip"><svg class="ic" aria-hidden="true"><use href="#i-shield"/></svg></span><h3>Datenschutz</h3></div>
-      <label class="row" for="inp-cut">Ereignisse in der Nähe von Start und Ziel verwerfen
-        <select id="inp-cut">
-          <option value="0">aus</option>
-          <option value="200">200 m</option>
-          <option value="400">400 m</option>
-        </select>
-      </label>
-    </div>
-    <div class="card">
-      <div class="card-head"><span class="chip"><svg class="ic" aria-hidden="true"><use href="#i-light"/></svg></span><h3>Ampeldaten</h3></div>
-      <p class="small" id="signals-info">–</p>
-      <button id="btn-reload-signals" class="btn" type="button"><svg class="ic" aria-hidden="true"><use href="#i-gps"/></svg>Ampeln in der Umgebung neu laden</button>
-    </div>
-    <div class="card">
-      <div class="card-head"><span class="chip"><svg class="ic" aria-hidden="true"><use href="#i-flask"/></svg></span><h3>Testen ohne Fahrt</h3></div>
-      <div class="btn-col">
-        <button id="btn-demo" class="btn" type="button"><svg class="ic" aria-hidden="true"><use href="#i-play"/></svg>Testfahrt simulieren</button>
-        <button id="btn-demo-clear" class="btn" type="button">Demo-Daten löschen</button>
-      </div>
-    </div>
-    <div class="card">
-      <div class="card-head"><span class="chip bad"><svg class="ic" aria-hidden="true"><use href="#i-trash"/></svg></span><h3>Alles löschen</h3></div>
-      <button id="btn-wipe" class="btn danger" type="button"><svg class="ic" aria-hidden="true"><use href="#i-trash"/></svg>Alle Fahrten löschen</button>
-      <div id="wipe-confirm" class="btn-col" hidden>
-        <p class="small">Wirklich alle Fahrten löschen? Das lässt sich nicht rückgängig machen.</p>
-        <button id="btn-wipe-yes" class="btn danger" type="button">Ja, alles löschen</button>
-        <button id="btn-wipe-no" class="btn" type="button">Abbrechen</button>
-      </div>
-    </div>
-    <p class="small"><a href="datenschutz.html" target="_blank" rel="noopener">Datenschutzerklärung</a></p>
-    <p class="small muted">Ampelstandorte: © OpenStreetMap-Mitwirkende. Prototyp, Version <span id="app-version"></span>.</p>
+    <header class="page-head"><h2 id="h-more" class="display">Einstellungen</h2>
+    <p class="page-sub">Alles bleibt auf diesem Handy, bis du es teilst. Tippe auf einen Bereich zum Ändern.</p></header>
     <p id="more-msg" class="msg" role="status" aria-live="polite"></p>
+    <section class="tip-list" aria-labelledby="h-more-mit"><h3 class="eyebrow" id="h-more-mit">Mitmachen</h3>
+    <details class="tipcard setbox" id="box-pilot">
+      <summary class="tip-row"><span class="tip-ic"><svg class="ic" aria-hidden="true"><use href="#i-flask"/></svg></span><span class="tip-main"><b>Pilot</b><span id="pilot-sub">Mit Code dabei sein</span></span></summary>
+      <div class="tip-detail" id="pilot-card"></div>
+    </details>
+    <details class="tipcard setbox" id="box-server">
+      <summary class="tip-row"><span class="tip-ic"><svg class="ic" aria-hidden="true"><use href="#i-cloud"/></svg></span><span class="tip-main"><b>Server und Dienste</b><span id="server-sub">Kein Server eingetragen</span></span></summary>
+      <div class="tip-detail">
+        <label class="field" for="inp-server">Adresse des Servers
+          <input id="inp-server" type="url" inputmode="url" autocomplete="off" spellcheck="false" placeholder="https://…/flowtown-api">
+        </label>
+        <label class="check"><input type="checkbox" id="inp-wir"><svg class="ic" aria-hidden="true"><use href="#i-route"/></svg> Fahrten anonym beitragen</label>
+        <label class="check"><input type="checkbox" id="inp-lage"><svg class="ic" aria-hidden="true"><use href="#i-alert"/></svg> Verkehrslage vor der Fahrt</label>
+        <label class="check"><input type="checkbox" id="inp-ki"><svg class="ic" aria-hidden="true"><use href="#i-spark"/></svg> KI-Einschätzung erlauben</label>
+        <button id="btn-server-test" class="btn" type="button"><svg class="ic" aria-hidden="true"><use href="#i-check"/></svg>Verbindung prüfen</button>
+        <p class="small muted" id="server-status" role="status" aria-live="polite"></p>
+        <details class="more-info"><summary><svg class="ic" aria-hidden="true"><use href="#i-shield"/></svg>Was wird gesendet?</summary>
+          <ul class="ilist small">
+            <li><svg class="ic" aria-hidden="true"><use href="#i-route"/></svg><span><b>Beitragen:</b> je Ampel nur Richtung, Zeitfenster und Wartezeit. Keine Uhrzeiten, kein Start, kein Ziel. Werte anderer erscheinen ab fünf Personen.</span></li>
+            <li><svg class="ic" aria-hidden="true"><use href="#i-alert"/></svg><span><b>Verkehrslage:</b> Die App lädt die Lage für ganz Bielefeld und prüft auf dem Handy, was deine Wege betrifft. Über dich wird dabei nichts gesendet.</span></li>
+            <li><svg class="ic" aria-hidden="true"><use href="#i-spark"/></svg><span><b>KI:</b> auf Knopfdruck zusammengefasste Werte an Mistral (EU), etwa Wartezeiten und Ampelnamen. Keine Koordinaten, nichts wird gespeichert.</span></li>
+          </ul></details>
+      </div>
+    </details>
+    </section>
+    <section class="tip-list" aria-labelledby="h-more-fahrt"><h3 class="eyebrow" id="h-more-fahrt">Für deine Fahrten</h3>
+    <details class="tipcard setbox" id="box-price">
+      <summary class="tip-row"><span class="tip-ic"><svg class="ic" aria-hidden="true"><use href="#i-euro"/></svg></span><span class="tip-main"><b>Preise</b><span id="price-sub">Für die Kostenschätzung</span></span></summary>
+      <div class="tip-detail">
+        <label class="row" for="inp-fuel">Sprit, Euro je Liter
+          <input id="inp-fuel" class="price" type="text" inputmode="decimal" autocomplete="off">
+        </label>
+        <label class="row" for="inp-power">Strom, Euro je kWh
+          <input id="inp-power" class="price" type="text" inputmode="decimal" autocomplete="off">
+        </label>
+      </div>
+    </details>
+    <details class="tipcard setbox" id="box-cut">
+      <summary class="tip-row"><span class="tip-ic"><svg class="ic" aria-hidden="true"><use href="#i-shield"/></svg></span><span class="tip-main"><b>Datenschutz</b><span id="cut-sub">Start und Ziel</span></span></summary>
+      <div class="tip-detail">
+        <label class="row" for="inp-cut">Ereignisse in der Nähe von Start und Ziel verwerfen
+          <select id="inp-cut">
+            <option value="0">aus</option>
+            <option value="200">200 m</option>
+            <option value="400">400 m</option>
+          </select>
+        </label>
+        <p class="small"><a href="datenschutz.html" target="_blank" rel="noopener">Datenschutzerklärung lesen</a></p>
+      </div>
+    </details>
+    <details class="tipcard setbox" id="box-signals">
+      <summary class="tip-row"><span class="tip-ic"><svg class="ic" aria-hidden="true"><use href="#i-light"/></svg></span><span class="tip-main"><b>Ampeldaten</b><span id="signals-sub">Noch keine Ampeln geladen</span></span></summary>
+      <div class="tip-detail">
+        <p class="small" id="signals-info">–</p>
+        <button id="btn-reload-signals" class="btn" type="button"><svg class="ic" aria-hidden="true"><use href="#i-gps"/></svg>Ampeln in der Umgebung neu laden</button>
+      </div>
+    </details>
+    </section>
+    <section class="tip-list" aria-labelledby="h-more-daten"><h3 class="eyebrow" id="h-more-daten">Deine Daten</h3>
+    <details class="tipcard setbox" id="box-data">
+      <summary class="tip-row"><span class="tip-ic"><svg class="ic" aria-hidden="true"><use href="#i-db"/></svg></span><span class="tip-main"><b>Sichern und übertragen</b><span id="data-sub">Exportieren und importieren</span></span></summary>
+      <div class="tip-detail">
+        <p class="small muted">Alles bleibt auf diesem Gerät, bis du es exportierst.</p>
+        <div class="btn-col">
+          <button id="btn-export" class="btn" type="button"><svg class="ic" aria-hidden="true"><use href="#i-download"/></svg>Daten exportieren (JSON)</button>
+          <button id="btn-export-csv" class="btn" type="button"><svg class="ic" aria-hidden="true"><use href="#i-download"/></svg>Halte exportieren (CSV)</button>
+          <label class="btn file-btn"><svg class="ic" aria-hidden="true"><use href="#i-upload"/></svg>Daten importieren<input id="inp-import" type="file" accept="application/json,.json"></label>
+        </div>
+      </div>
+    </details>
+    <details class="tipcard setbox" id="box-demo">
+      <summary class="tip-row"><span class="tip-ic"><svg class="ic" aria-hidden="true"><use href="#i-play"/></svg></span><span class="tip-main"><b>Testen ohne Fahrt</b><span>Eine Testfahrt abspielen</span></span></summary>
+      <div class="tip-detail">
+        <div class="btn-col">
+          <button id="btn-demo" class="btn" type="button"><svg class="ic" aria-hidden="true"><use href="#i-play"/></svg>Testfahrt simulieren</button>
+          <button id="btn-demo-clear" class="btn" type="button">Demo-Daten löschen</button>
+        </div>
+      </div>
+    </details>
+    <details class="tipcard setbox" id="box-wipe">
+      <summary class="tip-row"><span class="tip-ic"><svg class="ic" aria-hidden="true"><use href="#i-trash"/></svg></span><span class="tip-main"><b>Alles löschen</b><span>Alle Fahrten von diesem Handy entfernen</span></span></summary>
+      <div class="tip-detail">
+        <button id="btn-wipe" class="btn danger" type="button"><svg class="ic" aria-hidden="true"><use href="#i-trash"/></svg>Alle Fahrten löschen</button>
+        <div id="wipe-confirm" class="btn-col" hidden>
+          <p class="small">Wirklich alle Fahrten löschen? Das lässt sich nicht rückgängig machen.</p>
+          <button id="btn-wipe-yes" class="btn danger" type="button">Ja, alles löschen</button>
+          <button id="btn-wipe-no" class="btn" type="button">Abbrechen</button>
+        </div>
+      </div>
+    </details>
+    </section>
+    <p class="small muted more-foot"><a href="datenschutz.html" target="_blank" rel="noopener">Datenschutzerklärung</a> · Ampelstandorte: © OpenStreetMap-Mitwirkende · Prototyp, Version <span id="app-version"></span></p>
   </section>
 </main>
 

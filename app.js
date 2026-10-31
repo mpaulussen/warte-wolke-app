@@ -2,7 +2,7 @@
 (function () {
   'use strict';
 
-  const VERSION = '0.30.0';
+  const VERSION = '0.31.0';
   const $ = (s) => document.querySelector(s);
   const $$ = (s) => Array.from(document.querySelectorAll(s));
 
@@ -1673,7 +1673,7 @@
     }
     ev.target.value = '';
   });
-  function moreMsg(t) { $('#more-msg').textContent = t; }
+  function moreMsg(t) { $('#more-msg').textContent = t; if (!$('#view-more').hidden) { renderMoreSubs(); updateSignalsInfo(); } }
 
   // ---------- Navigation ----------
   function showView(name) {
@@ -1689,7 +1689,7 @@
     if (name === 'tips') renderTips();
     if (name === 'map') renderMap();
     if (name === 'start') { renderToday(); renderLastTrip(); }
-    if (name === 'more') { updateSignalsInfo(); renderPilotCard(); }
+    if (name === 'more') { updateSignalsInfo(); renderPilotCard(); renderMoreSubs(); }
     if (name === 'start') renderA2hs();
     const h = $('#view-' + name + ' h2');
     if (h && name !== 'drive') { h.setAttribute('tabindex', '-1'); h.focus({ preventScroll: true }); }
@@ -2857,9 +2857,24 @@
     saveTrips(); store.set('pilotSent', sent);
     return added;
   }
+  // Einstellungen: je Bereich eine Zeile, die sagt, was gerade gilt
+  function renderMoreSubs() {
+    const sv = settings.server || {};
+    let host = '';
+    try { host = sv.url ? new URL(sv.url).host : ''; } catch (e) { host = sv.url; }
+    const on = [sv.lage !== false && 'Verkehrslage', sv.wir && 'Beitragen', sv.ki && 'KI'].filter(Boolean);
+    $('#server-sub').textContent = host ? `${host}${on.length ? ' · ' + on.join(', ') : ''}` : (apiBase() ? `Standard-Server${on.length ? ' · ' + on.join(', ') : ''}` : 'Kein Server eingetragen');
+    $('#price-sub').textContent = `Sprit ${fmtNum(settings.fuelPrice, 2)} € · Strom ${fmtNum(settings.powerPrice, 2)} €`;
+    $('#cut-sub').textContent = settings.cut ? `${settings.cut} m um Start und Ziel werden nicht gespeichert` : 'Start und Ziel werden nicht ausgespart';
+    $('#signals-sub').textContent = clusters.length ? `${clusters.length} Kreuzungen gespeichert` : 'Noch keine Ampeln geladen';
+    const n = trips.filter((t) => !t.demo).length, d = trips.length - n;
+    $('#data-sub').textContent = `${n} Fahrt${n === 1 ? '' : 'en'} auf diesem Handy${d ? `, dazu ${d} Demo` : ''}`;
+  }
   function renderPilotCard() {
     const el = $('#pilot-card');
-    const head = cardHead('flask', 'Pilot', settings.pilot ? 'Code ' + esc(showCode(settings.pilot.code).replace(/-\w{4}$/, '-····')) : 'Mit Code dabei sein');
+    const head = '';
+    const p0 = settings.pilot;
+    $('#pilot-sub').textContent = p0 ? `Code ${showCode(p0.code).replace(/-\w{4}$/, '-····')}${p0.error ? ', Fehler beim Übertragen' : `, ${p0.n || 0} Fahrt${p0.n === 1 ? '' : 'en'} übertragen`}` : 'Mit Code dabei sein';
     if (!settings.pilot) {
       el.innerHTML = `${head}<label class="field" for="m-code">Pilot-Code<input id="m-code" type="text" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="FT-XXXX-XXXX"></label>
         <label class="check"><input type="checkbox" id="m-pilot"><span>Meine Fahrten für den Pilot übertragen</span></label>
@@ -2966,7 +2981,7 @@
     wirCache = null; wirAt = 0; newsAt = 0; lageAt = 0; lageCache = null;
     if (settings.server.wir) flushWir();
   };
-  ['#inp-server', '#inp-wir', '#inp-ki', '#inp-lage'].forEach((id) => $(id).addEventListener('change', saveServer));
+  ['#inp-server', '#inp-wir', '#inp-ki', '#inp-lage'].forEach((id) => $(id).addEventListener('change', () => { saveServer(); renderMoreSubs(); }));
   $('#btn-server-test').addEventListener('click', async () => {
     saveServer();
     const st = $('#server-status');
@@ -3026,7 +3041,7 @@
       { enableHighAccuracy: false, timeout: 15000 }
     );
   });
-  $('#inp-cut').addEventListener('change', (ev) => { settings.cut = Number(ev.target.value); store.set('settings', settings); });
+  $('#inp-cut').addEventListener('change', (ev) => { settings.cut = Number(ev.target.value); store.set('settings', settings); renderMoreSubs(); });
   function bindPrice(id, key) {
     $(id).addEventListener('change', (ev) => {
       const v = Number(ev.target.value.trim().replace(',', '.'));
@@ -3039,6 +3054,9 @@
   bindPrice('#inp-fuel', 'fuelPrice');
   bindPrice('#inp-power', 'powerPrice');
 
+  $('#view-more').addEventListener('toggle', (ev) => {
+    if (ev.target.classList && ev.target.classList.contains('setbox') && ev.target.open) $$('#view-more details.setbox[open]').forEach((d) => { if (d !== ev.target) d.open = false; });
+  }, true);
   // ---------- Start ----------
   setModeUI(settings.mode);
   applyModeWords(settings.mode);
