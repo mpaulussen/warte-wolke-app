@@ -9,10 +9,11 @@
   --good:#17784f; --warn:#b7791f; --bad:#c4382a; --bad-tint:#fbe5e1; --warn-bg:#fcefd2;
   --nav:#ffffff; --on-nav:#5b636b;
   /* Farbwelten: Vor der Fahrt, Tipps, Verlauf, Karte */
-  --w-vor-bg:#e6eefc; --w-vor-ink:#173c8c; --w-vor-acc:#2557c7;
-  --w-tip-bg:#eee8fc; --w-tip-ink:#4c2e9b;
-  --w-hist-bg:#fff0d1; --w-hist-ink:#6b4500;
-  --w-map-bg:#ddf3f0; --w-map-ink:#0b5a53;
+  /* eine Akzentfarbe für alle Seiten (ab 0.29): die Bereiche sind alle grün; Gelb und Rot nur, wo sie etwas bedeuten */
+  --w-vor-bg:#e3f2ea; --w-vor-ink:#0f5c3c; --w-vor-acc:#17784f;
+  --w-tip-bg:#e3f2ea; --w-tip-ink:#0f5c3c;
+  --w-hist-bg:#e3f2ea; --w-hist-ink:#0f5c3c;
+  --w-map-bg:#e3f2ea; --w-map-ink:#0f5c3c;
   --drive-bg:#10261c; --drive-fg:#ffffff; --drive-muted:#cfe9db;
   color-scheme:light;
 }
@@ -606,3 +607,5 @@ button.wrow:focus-visible,.tip-row:focus-visible,.tip-strip:focus-visible{outlin
 .route-item .card{margin-top:8px}
 .route-name{font-size:16px;line-height:1.3;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 #stats-body{display:flex;flex-direction:column;gap:16px}
+.tabs button[aria-current="page"][data-world="more"]{color:var(--accent);box-shadow:inset 0 3px 0 var(--accent)}
+.tabs button[aria-current="page"][data-world]{color:var(--accent);box-shadow:inset 0 3px 0 var(--accent)}
